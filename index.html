@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Portfolio | Full Stack Developer | Stellar Nexus</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Roboto, 'Inter', system-ui, -apple-system, Arial, sans-serif;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            background: radial-gradient(ellipse at 30% 40%, #0a0f1f 0%, #03050b 100%);
+            overflow-x: hidden;
+        }
+
+        /* --- Stars Animation (dipertahankan & ditingkatkan) --- */
+        @keyframes move-twinkle-back {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(-1000px) translateX(200px); }
+        }
+        @keyframes move-twinkle-front {
+            from { transform: translateY(0) translateX(0); }
+            to { transform: translateY(-1000px) translateX(-200px); }
+        }
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .stars-back, .stars-middle, .stars-front {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+        }
+        .stars-back { animation: move-twinkle-back 200s linear infinite; }
+        .stars-middle { animation: move-twinkle-front 150s linear infinite; }
+        .stars-front { animation: move-twinkle-back 100s linear infinite; }
+
+        /* stars pattern */
+        .stars-back::before, .stars-back::after,
+        .stars-middle::before, .stars-middle::after,
+        .stars-front::before, .stars-front::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: no-repeat;
+        }
+        .stars-back::before {
+            background-image: radial-gradient(2px 2px at 5% 15%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 12% 78%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 18% 42%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 24% 91%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 31% 23%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 37% 67%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 44% 8%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 52% 54%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 59% 33%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 66% 79%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 73% 12%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 81% 48%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 88% 64%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 94% 26%, #fff, rgba(0,0,0,0));
+        }
+        .stars-middle::before {
+            background-image: radial-gradient(2px 2px at 8% 32%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 16% 86%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 23% 51%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 29% 14%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 36% 72%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 43% 39%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 51% 95%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 58% 28%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 65% 63%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 72% 7%, #fff, rgba(0,0,0,0));
+        }
+        .stars-front::before {
+            background-image: radial-gradient(1px 1px at 3% 55%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 11% 29%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 19% 93%, #fff, rgba(0,0,0,0)), radial-gradient(3px 3px at 27% 47%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 35% 12%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 42% 76%, #fff, rgba(0,0,0,0)), radial-gradient(1px 1px at 49% 34%, #fff, rgba(0,0,0,0)), radial-gradient(2px 2px at 57% 88%, #fff, rgba(0,0,0,0));
+        }
+
+        /* Shooting Stars */
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0) rotate(45deg); opacity: 1; }
+            100% { transform: translateX(300px) translateY(300px) rotate(45deg); opacity: 0; }
+        }
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px 3px rgba(255,255,240,0.8);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, #fff6d0, transparent);
+            transform: translateX(-100%);
+        }
+
+        /* Planet decoration (soft glow) */
+        .planet {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            filter: blur(4px);
+            opacity: 0.5;
+        }
+        .planet-1 { width: 220px; height: 220px; bottom: 2%; right: -40px; background: radial-gradient(circle at 30% 30%, #ffcc88, #6b3e1a); box-shadow: 0 0 50px rgba(255,180,70,0.3);}
+        .planet-2 { width: 130px; height: 130px; top: 12%; left: -30px; background: radial-gradient(circle at 35% 35%, #b87c5a, #4a2a12); opacity: 0.4; filter: blur(5px);}
+        .planet-3 { width: 280px; height: 280px; top: 60%; left: -100px; background: radial-gradient(circle at 20% 20%, #8f6b42, #2f1d0c); opacity: 0.35; filter: blur(12px);}
+        .planet-4 { width: 90px; height: 90px; bottom: 18%; right: 12%; background: radial-gradient(circle at 60% 40%, #e0b07a, #875a2c); filter: blur(3px); opacity: 0.5;}
+
+        /* ----- GLOBAL STYLE : SEMUA TEKS PUTIH & SUDUT BULAT SEMPURNA ----- */
+        :root {
+            --glass-bg: rgba(12, 18, 34, 0.78);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --accent-green: #2ecc71;
+            --accent-green-dark: #27ae60;
+            --glow-green: rgba(46, 204, 113, 0.3);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 24px auto;
+            background: transparent;
+            position: relative;
+            z-index: 5;
+            border-radius: 44px;
+            overflow: hidden;
+            backdrop-filter: blur(0px);
+        }
+
+        /* Header section - Dark glass + rounded extreme */
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            padding: 48px 32px;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            border-radius: 44px 44px 32px 32px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+
+        .profile-img {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-green);
+            margin-bottom: 22px;
+            object-fit: cover;
+            background: #11161f;
+            padding: 3px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+        .profile-img:hover { transform: scale(1.02); }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+            letter-spacing: -0.3px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .header .title {
+            font-size: 1.2rem;
+            color: rgba(255,255,240,0.85);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin: 18px 0;
+        }
+
+        .badge {
+            background: rgba(46, 204, 113, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .github-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--accent-green);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 60px;
+            text-decoration: none;
+            margin-top: 18px;
+            font-weight: 600;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .github-link:hover {
+            background: var(--accent-green-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        }
+
+        /* content padding */
+        .content {
+            padding: 40px 32px;
+            background: transparent;
+        }
+
+        /* Gaya universal untuk semua kartu: rounded sempurna + kaca gelap + teks putih */
+        .about-section,
+        .stat-card,
+        .project-card,
+        .contact-section,
+        .skill-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 32px;
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .about-section {
+            padding: 32px;
+            margin-bottom: 48px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .section-title {
+            font-size: 1.9rem;
+            margin-bottom: 24px;
+            color: white;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            letter-spacing: -0.2px;
+        }
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 34px;
+            background: var(--accent-green);
+            border-radius: 8px;
+            box-shadow: 0 0 8px var(--accent-green);
+        }
+
+        .about-section p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 14px;
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Skills grid & category */
+        .skills-section {
+            margin-bottom: 52px;
+        }
+        .category {
+            margin-bottom: 38px;
+        }
+        .category h3 {
+            color: white;
+            margin-bottom: 18px;
+            font-size: 1.45rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.2px;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .skill-card {
+            padding: 12px 16px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: white;
+            border-radius: 28px;
+            background: rgba(20, 28, 44, 0.75);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: all 0.25s;
+            cursor: default;
+        }
+        .skill-card:hover {
+            border-color: var(--accent-green);
+            transform: translateY(-4px);
+            background: rgba(46, 204, 113, 0.15);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+        }
+
+        /* Stats section (grid) */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .stat-card {
+            padding: 28px 20px;
+            text-align: center;
+            border-radius: 32px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-green);
+            box-shadow: 0 20px 30px -12px rgba(0,0,0,0.5);
+        }
+        .stat-number {
+            font-size: 2.7rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            text-shadow: 0 0 6px rgba(46,204,113,0.5);
+            line-height: 1.2;
+        }
+        .stat-label {
+            color: rgba(255,255,245,0.85);
+            font-size: 0.95rem;
+            margin-top: 12px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* Projects Grid */
+        .projects-section {
+            margin-bottom: 52px;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 28px;
+            margin-top: 28px;
+        }
+        .project-card {
+            padding: 28px;
+            border-radius: 32px;
+            background: rgba(12, 20, 32, 0.8);
+            backdrop-filter: blur(8px);
+            transition: all 0.3s;
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 24px 40px rgba(0,0,0,0.45);
+        }
+        .project-card h3 {
+            color: white;
+            margin-bottom: 16px;
+            font-size: 1.45rem;
+            font-weight: 700;
+        }
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .tech-tag {
+            background: rgba(46, 204, 113, 0.2);
+            border: 1px solid rgba(46, 204, 113, 0.5);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+            backdrop-filter: blur(2px);
+        }
+        .project-desc {
+            color: rgba(255, 255, 245, 0.85);
+            line-height: 1.65;
+            font-size: 0.94rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            padding: 40px 32px;
+            border-radius: 38px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        .contact-section h3 {
+            margin-bottom: 28px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+        }
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+        .contact-btn {
+            background: rgba(20, 28, 44, 0.8);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 60px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .contact-btn:hover {
+            background: var(--accent-green);
+            border-color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            color: white;
+        }
+        .contact-section p {
+            margin-top: 28px;
+            font-size: 0.95rem;
+            color: rgba(255,255,240,0.85);
+        }
+
+        /* Footer */
+        .footer {
+            background: rgba(5, 8, 18, 0.85);
+            backdrop-filter: blur(12px);
+            color: rgba(255,255,245,0.8);
+            text-align: center;
+            padding: 28px 20px;
+            font-size: 0.85rem;
+            border-top: 1px solid var(--glass-border);
+            border-radius: 32px 32px 44px 44px;
+            margin-top: 20px;
+        }
+        .footer p {
+            color: #ddd;
+        }
+
+        /* Responsive touch */
+        @media (max-width: 768px) {
+            .container { margin: 12px; border-radius: 32px; }
+            .header { padding: 32px 20px; border-radius: 32px 32px 28px 28px; }
+            .header h1 { font-size: 1.9rem; }
+            .content { padding: 28px 20px; }
+            .section-title { font-size: 1.6rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .stats-section { gap: 16px; }
+            .stat-number { font-size: 2rem; }
+            .contact-btn { padding: 8px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .badge { font-size: 0.7rem; }
+            .project-card h3 { font-size: 1.3rem; }
+            .section-title { font-size: 1.5rem; }
+            .contact-section h3 { font-size: 1.4rem; }
+        }
+
+        /* tambahan efek smooth */
+        a, button, .project-card, .stat-card, .skill-card {
+            transition: all 0.25s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="stars">
+        <div class="stars-back"></div>
+        <div class="stars-middle"></div>
+        <div class="stars-front"></div>
+    </div>
+    <div class="planet planet-1"></div>
+    <div class="planet planet-2"></div>
+    <div class="planet planet-3"></div>
+    <div class="planet planet-4"></div>
+
+    <div class="container">
+        <div class="header">
+            <img src="img/baqir.jpg" alt="Muhammad Baqir" class="profile-img" onerror="this.src='https://ui-avatars.com/api/?background=0f9d58&color=fff&bold=true&size=130&name=MF'">
+            <h1>Sy Muhammad Baqir</h1>
+            <div class="title">✦ Full Stack Architect | Mobile & Web Visionary ✦</div>
+            <div class="badge-container">
+                <span class="badge">🚀 5+ Years Expedition</span>
+                <span class="badge">💎 25+ Cosmic Projects</span>
+                <span class="badge">⭐ Ready for Launch</span>
+            </div>
+            <a href="https://github.com/yourusername" class="github-link" target="_blank">
+                <span>🔗</span> Explore GitHub Universe
+            </a>
+        </div>
+
+        <div class="content">
+            <div class="stats-section">
+                <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Projects Completed</div></div>
+                <div class="stat-card"><div class="stat-number">5+</div><div class="stat-label">Years Experience</div></div>
+                <div class="stat-card"><div class="stat-number">18+</div><div class="stat-label">Happy Clients</div></div>
+                <div class="stat-card"><div class="stat-number">24/7</div><div class="stat-label">Stellar Support</div></div>
+            </div>
+
+            <div class="about-section">
+                <div class="section-title">Tentang Saya</div>
+                <p>Seorang <strong>Full Stack Developer</strong> dengan misi membangun solusi digital futuristik — menggabungkan kode elegan, performa tinggi, dan keamanan tangguh. Berpengalaman dalam aplikasi hybrid, sistem real-time, dan arsitektur microservices.</p>
+                <p>🌟 <strong>Spesialisasi:</strong> Aplikasi Hybrid (React Native, Flutter), Backend Scalable (Laravel, Express)</p>
+                <p>🎯 <strong>Visi:</strong> Menciptakan ekosistem teknologi yang memberdayakan bisnis menuju transformasi digital tanpa batas.</p>
+            </div>
+
+            <div class="skills-section">
+                <div class="section-title">Tech Stack & Keahlian</div>
+                <div class="category"><h3>📱 Mobile Development</h3><div class="skills-grid"><div class="skill-card">React Native</div><div class="skill-card">Flutter</div><div class="skill-card">iOS / Android</div></div></div>
+                <div class="category"><h3>🌐 Web Development</h3><div class="skills-grid"><div class="skill-card">Laravel</div><div class="skill-card">Express.js</div><div class="skill-card">React.js</div><div class="skill-card">Next.js</div><div class="skill-card">PHP 8+</div><div class="skill-card">Bootstrap</div></div></div>
+                <div class="category"><h3>🗄️ Database & Cloud</h3><div class="skills-grid"><div class="skill-card">MySQL / MariaDB</div><div class="skill-card">PostgreSQL</div><div class="skill-card">SQLite</div></div></div>
+                <div class="category"><h3>🛠️ DevOps & Tools</h3><div class="skills-grid"><div class="skill-card">Git/GitHub Actions</div><div class="skill-card">RESTful API</div><div class="skill-card">JWT / OAuth</div></div></div>
+            </div>
+
+            <div class="projects-section">
+                <div class="section-title">✨ Featured Constellations ✨</div>
+                <div class="projects-grid">
+                    <div class="project-card"><h3>🏪 Point of Sales (POS) Hybrid</h3><div class="project-tech"><span class="tech-tag">React Native</span><span class="tech-tag">Laravel</span><span class="tech-tag">MySQL</span></div><div class="project-desc">Aplikasi POS mutakhir untuk Android & iOS. Manajemen produk, transaksi real-time, stok otomatis, dan laporan keuangan interaktif.</div></div>
+                    <div class="project-card"><h3>📍 Absen Online GeoRadius</h3><div class="project-tech"><span class="tech-tag">Flutter</span><span class="tech-tag">Express.js</span><span class="tech-tag">PostgreSQL</span></div><div class="project-desc">Absensi karyawan dengan geofencing presisi, notifikasi push, rekapitulasi otomatis & export Excel. Solusi HRD modern.</div></div>
+                    <div class="project-card"><h3>🚚 Logistik & Perpaketan Pintar</h3><div class="project-tech"><span class="tech-tag">Laravel</span><span class="tech-tag">React</span><span class="tech-tag">WebSocket</span></div><div class="project-desc">Manajemen armada, tracking real-time, sistem routing dinamis, dan dashboard pengiriman dengan visualisasi peta.</div></div>
+                    <div class="project-card"><h3>🛍️ E-Commerce Multivendor</h3><div class="project-tech"><span class="tech-tag">Next.js</span><span class="tech-tag">Express</span><span class="tech-tag">Mysql</span></div><div class="project-desc">Platform marketplace modern: payment gateway, review, manajemen toko.</div></div>
+                    <div class="project-card"><h3>📊 Inventory & Barcode System</h3><div class="project-tech"><span class="tech-tag">PHP</span><span class="tech-tag">MySQL</span><span class="tech-tag">Chart.js</span></div><div class="project-desc">Sistem inventory dengan scanning barcode, multi-gudang, dan prediksi stok menggunakan algoritma moving average.</div></div>
+                    <div class="project-card"><h3>📱 Delivery Driver Fleet</h3><div class="project-tech"><span class="tech-tag">React Native</span><span class="tech-tag">Node.js</span><span class="tech-tag">Socket.io</span></div><div class="project-desc">Aplikasi kurir dengan live location, optimasi rute, dan notifikasi push real-time. Meningkatkan efisiensi 35%.</div></div>
+                </div>
+            </div>
+
+            <div class="contact-section">
+                <h3>📡 Contact</h3>
+                <div class="contact-links">
+                    <a href="https://github.com/yourusername" class="contact-btn" target="_blank">💻 GitHub</a>
+                    <a href="muhammadbagir160@gmail.com" class="contact-btn">✉️ Email</a>
+                    <a href="www.linkedin.com/in/sy-muhammad-baqir-162162132" class="contact-btn" target="_blank">🔗 LinkedIn</a>
+                    <a href="#" class="contact-btn">📄 Resume Kreatif</a>
+                </div>
+                <p>🚀 Tersedia untuk kolaborasi open-source, freelance, Hubungi sekarang!</p>
+            </div>
+        </div>
+        <div class="footer">
+            <p>© 2026 Sy Muhammad Baqir — Full Stack Architect | Orbiting Code & Stars</p>
+            <p style="margin-top: 8px;">✨ Dibangun dengan semangat antariksa & performa tanpa batas ✨</p>
+        </div>
+    </div>
+
+    <script>
+        // Dinamis avatar jika gagal
+        const img = document.querySelector('.profile-img');
+        if(img && img.naturalWidth === 0) {
+            img.onerror = () => { img.src = 'https://ui-avatars.com/api/?background=2ecc71&color=fff&bold=true&size=130&name=MF'; };
+        }
+        // shooting stars intermiten
+        function createShootingStar() {
+            const starDiv = document.createElement('div');
+            starDiv.className = 'shooting-star';
+            const randX = Math.random() * window.innerWidth;
+            const randY = Math.random() * (window.innerHeight * 0.4);
+            starDiv.style.left = randX + 'px';
+            starDiv.style.top = randY + 'px';
+            starDiv.style.animation = `shoot ${Math.random() * 1.8 + 1.2}s linear forwards`;
+            document.body.appendChild(starDiv);
+            setTimeout(() => starDiv.remove(), 2800);
+        }
+        setInterval(() => { if(Math.random() > 0.65) createShootingStar(); }, 4800);
+    </script>
+</body>
+</html>
